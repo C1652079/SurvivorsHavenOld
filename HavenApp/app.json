@@ -7,6 +7,7 @@
       "android",
       "web"
     ],
+    "sdkVersion": "36.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

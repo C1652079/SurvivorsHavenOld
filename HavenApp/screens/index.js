@@ -1,0 +1,1 @@
+export ChooseMoodImage from './ChooseMoodImage';
