@@ -1,20 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { ChooseMoodImage } from './screens/';
+import { ChooseMoodImage, MeditationTimer } from './screens/';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <ChooseMoodImage />
-    </View>
-  );
+  return <MeditationTimer />;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const styles = StyleSheet.create({});
