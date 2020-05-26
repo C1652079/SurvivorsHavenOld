@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Alert,
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 const ChooseMoodImage = (props) => {
@@ -10,7 +17,11 @@ const ChooseMoodImage = (props) => {
     let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert('Permission to access camera roll is required!');
+      Alert.alert(
+        'Access Denied!',
+        'Permission to access camera roll is required!',
+        [{ text: 'Okay', style: 'destructive' }]
+      );
       return;
     }
 

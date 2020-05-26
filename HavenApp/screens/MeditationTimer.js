@@ -68,10 +68,6 @@ const MeditationTimer = (props) => {
       }}
     >
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Meditation Timer</Text>
-        </View>
-
         {!showTimer && (
           <View style={styles.container}>
             <TextInput
@@ -138,20 +134,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  header: {
-    position: 'absolute',
-    top: 0,
-    height: 85,
-    width: '100%',
-    backgroundColor: '#4CAF50',
-  },
-  headerText: {
-    fontSize: 24,
-    color: '#fff',
-    paddingTop: 40,
-    paddingLeft: 10,
-    textAlign: 'center',
   },
   beginButton: {
     margin: 20,
