@@ -83,7 +83,11 @@ const Signup = (props) => {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} enabled behavior="padding">
+    <KeyboardAvoidingView
+      style={styles.container}
+      enabled
+      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+    >
       <ScrollView>
         <Formik
           initialValues={{
@@ -170,7 +174,6 @@ const Signup = (props) => {
                 errorValue={touched.confirmPassword && errors.confirmPassword}
               />
               <CheckBox
-                containerStyle={styles.checkBoxContainer}
                 checkedIcon="check-box"
                 iconType="material"
                 uncheckedIcon="check-box-outline-blank"
@@ -204,21 +207,16 @@ const Signup = (props) => {
       </ScrollView>
     </KeyboardAvoidingView>
   );
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      marginTop: 50,
-    },
-    buttonContainer: {
-      margin: 25,
-    },
-    checkBoxContainer: {
-      backgroundColor: '#fff',
-      borderColor: '#fff',
-    },
-  });
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 50,
+  },
+  buttonContainer: {
+    margin: 25,
+  },
+});
 
 export default withFirebaseHOC(Signup);

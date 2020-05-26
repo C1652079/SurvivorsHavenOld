@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, SafeAreaView, View, StyleSheet } from 'react-native';
+import { Button } from 'react-native-elements';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { FormButton, FormInput, ErrorMessage } from '../../components/';
@@ -13,6 +14,10 @@ const validationSchema = Yup.object().shape({
 });
 
 const ForgotPassword = (props) => {
+  const GoToLogin = () => {
+    return props.navigation.navigate('Login');
+  };
+
   const PasswordResetHandler = async (values, actions) => {
     const { email } = values;
     try {
@@ -69,6 +74,14 @@ const ForgotPassword = (props) => {
           </>
         )}
       </Formik>
+      <Button
+        title="Go back"
+        onPress={GoToLogin}
+        titleStyle={{
+          color: '#039BE5',
+        }}
+        type="clear"
+      />
     </SafeAreaView>
   );
 };
@@ -76,7 +89,6 @@ const ForgotPassword = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     marginTop: 150,
   },
   text: {

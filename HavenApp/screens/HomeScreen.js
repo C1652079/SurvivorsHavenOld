@@ -27,7 +27,7 @@ const HomeScreen = (props) => {
       />
       <Button
         title="Signout"
-        onPress={handleSignout}
+        onPress={SignOutHandler}
         titleStyle={{
           color: '#F57C00',
         }}
