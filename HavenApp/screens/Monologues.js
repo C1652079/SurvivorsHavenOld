@@ -11,12 +11,7 @@ import {
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
 import * as Permissions from 'expo-permissions';
-import {
-  Ionicons,
-  MaterialCommunityIcons,
-  MaterialIcons,
-  Octicons,
-} from '@expo/vector-icons';
+import { Ionicons, Entypo, Octicons } from '@expo/vector-icons';
 
 const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get('window');
 const DISABLED_OPACITY = 0.5;
@@ -54,9 +49,19 @@ export default class Monologues extends React.Component {
   }
 
   _askForPermissions = async () => {
-    const response = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
+    let permissionResult = await Audio.requestPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      Alert.alert(
+        'Access Denied!',
+        'Permission to access microphone is required!',
+        [{ text: 'Okay', style: 'destructive' }]
+      );
+      return;
+    }
+
     this.setState({
-      haveRecordingPermissions: response.status === 'granted',
+      haveRecordingPermissions: true,
     });
   };
 
@@ -103,6 +108,8 @@ export default class Monologues extends React.Component {
   };
 
   async _stopPlaybackAndBeginRecording() {
+    this._askForPermissions();
+
     this.setState({
       isLoading: true,
     });
@@ -298,37 +305,21 @@ export default class Monologues extends React.Component {
             },
           ]}
         >
-          <View />
           <View style={styles.recordingContainer}>
-            <View />
             <TouchableOpacity
-              style={styles.wrapper}
               onPress={this._onRecordPressed}
               disabled={this.state.isLoading}
             >
-              <Ionicons name="ios-mic" size={60} color="black" />
+              {this.state.isRecording ? (
+                <Ionicons name="ios-mic" size={60} color="red" />
+              ) : (
+                <Ionicons name="ios-mic" size={60} color="black" />
+              )}
             </TouchableOpacity>
-            <View style={styles.recordingDataContainer}>
-              <View />
-              <Text style={styles.liveText}>
-                {this.state.isRecording ? 'Recording' : ''}
-              </Text>
-              <View style={styles.recordingDataRowContainer}>
-                <MaterialCommunityIcons
-                  style={{ opacity: this.state.isRecording ? 1 : 0 }}
-                  name="record"
-                  size={20}
-                  color="red"
-                />
-                <Text style={styles.recordingTimestamp}>
-                  {this._getRecordingTimestamp()}
-                </Text>
-              </View>
-              <View />
-            </View>
-            <View />
+            <Text style={styles.recordingTimestamp}>
+              {this._getRecordingTimestamp()}
+            </Text>
           </View>
-          <View />
         </View>
         <View
           style={[
@@ -341,7 +332,6 @@ export default class Monologues extends React.Component {
             },
           ]}
         >
-          <View />
           <View style={styles.playbackContainer}>
             <Slider
               style={styles.playbackSlider}
@@ -354,12 +344,29 @@ export default class Monologues extends React.Component {
               {this._getPlaybackTimestamp()}
             </Text>
           </View>
-          <View
-            style={[styles.buttonsContainerBase, styles.buttonsContainerTopRow]}
-          >
+
+          <View style={styles.buttonsContainer}>
+            <View style={styles.playStopContainer}>
+              <TouchableOpacity
+                onPress={this._onStopPressed}
+                disabled={!this.state.isPlaybackAllowed || this.state.isLoading}
+              >
+                <Entypo name="controller-stop" size={50} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={this._onPlayPausePressed}
+                disabled={!this.state.isPlaybackAllowed || this.state.isLoading}
+              >
+                {this.state.isPlaying ? (
+                  <Ionicons name="ios-pause" size={50} color="black" />
+                ) : (
+                  <Ionicons name="ios-play" size={50} color="black" />
+                )}
+              </TouchableOpacity>
+            </View>
+
             <View style={styles.volumeContainer}>
               <TouchableOpacity
-                style={styles.wrapper}
                 onPress={this._onMutePressed}
                 disabled={!this.state.isPlaybackAllowed || this.state.isLoading}
               >
@@ -376,30 +383,7 @@ export default class Monologues extends React.Component {
                 disabled={!this.state.isPlaybackAllowed || this.state.isLoading}
               />
             </View>
-            <View style={styles.playStopContainer}>
-              <TouchableOpacity
-                onPress={this._onPlayPausePressed}
-                disabled={!this.state.isPlaybackAllowed || this.state.isLoading}
-              >
-                {this.state.isPlaying ? (
-                  <Ionicons name="ios-pause" size={50} color="black" />
-                ) : (
-                  <Ionicons name="ios-play" size={50} color="black" />
-                )}
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.wrapper}
-                onPress={this._onStopPressed}
-                disabled={!this.state.isPlaybackAllowed || this.state.isLoading}
-              >
-                <MaterialIcons name="stop" size={55} color="black" />
-              </TouchableOpacity>
-            </View>
-            <View />
           </View>
-
-          <View />
         </View>
       </View>
     );
@@ -407,122 +391,55 @@ export default class Monologues extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  emptyContainer: {
-    alignSelf: 'stretch',
-  },
   container: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
-    alignSelf: 'stretch',
-    minHeight: DEVICE_HEIGHT,
-    maxHeight: DEVICE_HEIGHT,
   },
   noPermissionsText: {
     textAlign: 'center',
   },
-  wrapper: {},
   halfScreenContainer: {
-    flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
-    alignSelf: 'stretch',
-    minHeight: DEVICE_HEIGHT / 2.0,
-    maxHeight: DEVICE_HEIGHT / 2.0,
   },
   recordingContainer: {
-    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'stretch',
-    minHeight: 119,
-    maxHeight: 119,
-  },
-  recordingDataContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    minHeight: 119,
-    maxHeight: 119,
-    minWidth: 70 * 3.0,
-    maxWidth: 70 * 3.0,
-  },
-  recordingDataRowContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    minHeight: 20,
-    maxHeight: 20,
   },
   playbackContainer: {
-    flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
-    alignSelf: 'stretch',
-    minHeight: 19 * 2.0,
-    maxHeight: 19 * 2.0,
   },
   playbackSlider: {
-    alignSelf: 'stretch',
-  },
-  liveText: {
-    color: 'red',
+    width: DEVICE_WIDTH / 1.5,
   },
   recordingTimestamp: {
     paddingLeft: 20,
   },
   playbackTimestamp: {
-    textAlign: 'right',
-    alignSelf: 'stretch',
-    paddingRight: 20,
+    textAlign: 'center',
   },
-  image: {},
-  textButton: {
-    padding: 10,
-  },
-  buttonsContainerBase: {
-    flex: 1,
+  buttonsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  buttonsContainerTopRow: {
-    maxHeight: 58,
-    alignSelf: 'stretch',
-    paddingRight: 20,
+    justifyContent: 'space-evenly',
   },
   playStopContainer: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    minWidth: ((34 + 22) * 3.0) / 2.0,
-    maxWidth: ((34 + 22) * 3.0) / 2.0,
+    justifyContent: 'space-evenly',
   },
   volumeContainer: {
-    flex: 1,
+    flex: 2,
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    minWidth: DEVICE_WIDTH / 2.0,
-    maxWidth: DEVICE_WIDTH / 2.0,
+    justifyContent: 'space-evenly',
   },
   volumeSlider: {
-    width: DEVICE_WIDTH / 2.0,
-  },
-  buttonsContainerBottomRow: {
-    maxHeight: 19,
-    alignSelf: 'stretch',
-    paddingRight: 20,
-    paddingLeft: 20,
-  },
-  rateSlider: {
-    width: DEVICE_WIDTH / 2.0,
+    width: DEVICE_WIDTH / 3.0,
   },
 });
