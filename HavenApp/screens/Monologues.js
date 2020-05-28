@@ -297,30 +297,21 @@ export default class Monologues extends React.Component {
 
     return (
       <View style={styles.container}>
-        <View
-          style={[
-            styles.halfScreenContainer,
-            {
-              opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0,
-            },
-          ]}
-        >
           <View style={styles.recordingContainer}>
             <TouchableOpacity
               onPress={this._onRecordPressed}
               disabled={this.state.isLoading}
             >
               {this.state.isRecording ? (
-                <Ionicons name="ios-mic" size={60} color="red" />
+                <Ionicons name="ios-mic" size={80} color="red" />
               ) : (
-                <Ionicons name="ios-mic" size={60} color="black" />
+                <Ionicons name="ios-mic" size={80} color="black" />
               )}
             </TouchableOpacity>
             <Text style={styles.recordingTimestamp}>
               {this._getRecordingTimestamp()}
             </Text>
           </View>
-        </View>
         <View
           style={[
             styles.halfScreenContainer,
@@ -414,11 +405,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    margin: 20,
   },
   playbackSlider: {
     width: DEVICE_WIDTH / 1.5,
   },
   recordingTimestamp: {
+    fontSize: 34,
     paddingLeft: 20,
   },
   playbackTimestamp: {
