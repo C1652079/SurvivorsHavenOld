@@ -7,32 +7,23 @@ const AudioList = (props) => {
   const renderAudioItem = (itemData) => {
     return (
       <AudioItem
+        id={itemData.item.id}
         title={itemData.item.title}
         date={itemData.item.recordDate}
         url={itemData.item.audioUrl}
         enablePlayback={props.enablePlayback}
+        removeFile={props.removeFile}
       />
     );
   };
 
   return (
-    <View>
       <FlatList
         data={props.listData}
         keyExtractor={(item, index) => item.id}
         renderItem={renderAudioItem}
       />
-    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  list: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 15,
-  },
-});
 
 export default AudioList;

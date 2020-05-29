@@ -6,12 +6,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   Slider,
+  Alert,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons, Entypo, Octicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
 import { AudioList } from '../../components';
 import { durationToStr } from '../../utils/DateHelper';
+import { removeAudio } from '../../store/actions';
 
 const { width: DeviceWidth } = Dimensions.get('window');
 
@@ -31,6 +33,8 @@ const AudioLibrary = (props) => {
   const [volume, setVolume] = useState(1.0);
   const [rate, setRate] = useState(1.0);
   const [correctPitch, setCorrectPitch] = useState(false);
+
+  const dispatch = useDispatch();
 
   const setAudioMode = async () => {
     try {
@@ -158,12 +162,30 @@ const AudioLibrary = (props) => {
     return 0;
   };
 
+  const confirmationReceived = () => {
+    setConfirmedDelete(true);
+  };
+
+  const removeAudioFromLibrary = (audioItemId) => {
+    Alert.alert('Confirmation', 'Are you sure you want to delete this audio?', [
+      {
+        text: 'Confirm',
+        style: 'destructive',
+        onPress: () => {
+          dispatch(removeAudio(audioItemId));
+        },
+      },
+      { text: 'Cancel', style: 'destructive' },
+    ]);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.audioList}>
         <AudioList
           listData={availableRecordings}
           enablePlayback={enablePlayback}
+          removeFile={removeAudioFromLibrary}
         />
       </View>
       <View
