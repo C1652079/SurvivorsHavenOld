@@ -1,12 +1,18 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import { HomeScreen, MeditationTimer, Monologues } from '../screens/';
+import {
+  HomeScreen,
+  MeditationTimer,
+  RecordAudio,
+  AudioLibrary,
+} from '../screens/';
 
 const AppNavigator = createStackNavigator(
   {
     Home: HomeScreen,
     MeditationTimer: MeditationTimer,
-    Monologues: Monologues
+    RecordAudio: RecordAudio,
+    AudioLibrary: AudioLibrary,
   },
   {
     initialRouteName: 'Home',
