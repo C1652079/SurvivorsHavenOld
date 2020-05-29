@@ -20,7 +20,8 @@ const audioReducer = (state = initialState, action) => {
 
     case REMOVE_AUDIO:
       if (existingIndex >= 0) {
-        const updatedList = [...state.audioItems].splice(existingIndex, 1);
+        const updatedList = [...state.audioItems];
+        updatedList.splice(existingIndex, 1);
         return { ...state, audioItems: updatedList };
       }
     default:
