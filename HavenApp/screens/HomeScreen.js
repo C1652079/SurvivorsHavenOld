@@ -26,9 +26,9 @@ const HomeScreen = (props) => {
         type="clear"
       />
       <Button
-        title="Monologues"
+        title="RecordAudio"
         onPress={() => {
-          props.navigation.navigate('Monologues');
+          props.navigation.navigate('RecordAudio');
         }}
         titleStyle={{
           color: '#F57C00',
