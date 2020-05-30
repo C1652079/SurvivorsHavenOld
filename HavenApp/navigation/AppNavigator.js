@@ -5,11 +5,13 @@ import {
   MeditationTimer,
   RecordAudio,
   AudioLibrary,
+  ChooseMoodImage
 } from '../screens/';
 
 const AppNavigator = createStackNavigator(
   {
     Home: HomeScreen,
+    ChooseImage: ChooseMoodImage,
     MeditationTimer: MeditationTimer,
     RecordAudio: RecordAudio,
     AudioLibrary: AudioLibrary,
