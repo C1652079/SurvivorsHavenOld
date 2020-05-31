@@ -26,9 +26,29 @@ const HomeScreen = (props) => {
         type="clear"
       />
       <Button
-        title="RecordAudio"
+        title="Choose Image"
+        onPress={() => {
+          props.navigation.navigate('ChooseImage');
+        }}
+        titleStyle={{
+          color: '#F57C00',
+        }}
+        type="clear"
+      />
+      <Button
+        title="Record Audio"
         onPress={() => {
           props.navigation.navigate('RecordAudio');
+        }}
+        titleStyle={{
+          color: '#F57C00',
+        }}
+        type="clear"
+      />
+      <Button
+        title="Draw Pad"
+        onPress={() => {
+          props.navigation.navigate('DrawPad');
         }}
         titleStyle={{
           color: '#F57C00',
