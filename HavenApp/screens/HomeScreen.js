@@ -46,6 +46,16 @@ const HomeScreen = (props) => {
         type="clear"
       />
       <Button
+        title="Draw Pad"
+        onPress={() => {
+          props.navigation.navigate('DrawPad');
+        }}
+        titleStyle={{
+          color: '#F57C00',
+        }}
+        type="clear"
+      />
+      <Button
         title="Signout"
         onPress={SignOutHandler}
         titleStyle={{

@@ -5,7 +5,8 @@ import {
   MeditationTimer,
   RecordAudio,
   AudioLibrary,
-  ChooseMoodImage
+  ChooseMoodImage,
+  DrawPad
 } from '../screens/';
 
 const AppNavigator = createStackNavigator(
@@ -15,6 +16,7 @@ const AppNavigator = createStackNavigator(
     MeditationTimer: MeditationTimer,
     RecordAudio: RecordAudio,
     AudioLibrary: AudioLibrary,
+    DrawPad: DrawPad
   },
   {
     initialRouteName: 'Home',
