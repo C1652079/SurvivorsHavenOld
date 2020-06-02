@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
-  Platform,
   Text,
   View,
   TouchableOpacity,
@@ -9,8 +8,10 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import CountDown from 'react-native-countdown-component';
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const MeditationTimer = (props) => {
   const [enteredValue, setEnteredValue] = useState('');
@@ -39,10 +40,7 @@ const MeditationTimer = (props) => {
     resetInput();
     Keyboard.dismiss();
     setShowTimer(true);
-  };
-
-  const resetTimer = () => {
-    setReset('reset');
+    beginSession();
   };
 
   const beginSession = () => {
@@ -50,7 +48,6 @@ const MeditationTimer = (props) => {
   };
 
   const stopSession = () => {
-    //resetTimer();
     setTimerRunning(false);
   };
 
@@ -68,100 +65,107 @@ const MeditationTimer = (props) => {
       }}
     >
       <View style={styles.container}>
-        {!showTimer && (
-          <View style={styles.container}>
-            <TextInput
-              style={styles.input}
-              autoCorrect={false}
-              keyboardType="number-pad"
-              maxLength={2}
-              onChangeText={inputHandler}
-              value={enteredValue}
-              placeholder="Enter minutes"
-            />
-            <TouchableOpacity
-              style={styles.beginButton}
-              onPress={confirmedInputHandler}
-            >
-              <Text style={styles.whiteText}>Confirm</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        <ImageBackground
+          source={require('../assets/backgrounds/Meditation.png')}
+          style={styles.image}
+        >
+          {!showTimer && (
+            <View style={styles.startContainer}>
+              <TextInput
+                style={styles.input}
+                autoCorrect={false}
+                keyboardType="number-pad"
+                maxLength={2}
+                onChangeText={inputHandler}
+                value={enteredValue}
+                placeholder="Enter minutes"
+                placeholderTextColor="white"
+              />
 
-        {showTimer && (
-          <View>
-            <View style={styles.textView}>
-              <Text style={styles.blackText}>
-                Close your eyes, relax, and breath naturally.
-              </Text>
+              <TouchableOpacity onPress={confirmedInputHandler}>
+                <AntDesign name="play" size={90} color="white" />
+              </TouchableOpacity>
             </View>
+          )}
 
-            <CountDown
-              id={reset}
-              until={chosenNumber}
-              size={30}
-              timeToShow={['M', 'S']}
-              onFinish={stopSession}
-              running={timerRunning}
-            />
-          </View>
-        )}
+          {showTimer && (
+            <View style={styles.startContainer}>
+              <View>
+                <Text style={styles.infoText}>
+                  Close your eyes, relax, and breath naturally.
+                </Text>
 
-        {!timerRunning && showTimer && (
-          <TouchableOpacity style={styles.beginButton} onPress={beginSession}>
-            <Text style={styles.whiteText}>Start</Text>
-          </TouchableOpacity>
-        )}
+                <CountDown
+                  id={reset}
+                  until={chosenNumber}
+                  size={50}
+                  digitStyle={styles.countdownDigits}
+                  digitTxtStyle={{ color: 'white' }}
+                  timeToShow={['M', 'S']}
+                  onFinish={stopSession}
+                  running={timerRunning}
+                  separatorStyle={{ color: 'white' }}
+                  timeLabels={{ m: null, s: null }}
+                  showSeparator
+                />
+              </View>
 
-        {timerRunning && showTimer && (
-          <TouchableOpacity style={styles.stopButton} onPress={stopSession}>
-            <Text style={styles.whiteText}>Pause</Text>
-          </TouchableOpacity>
-        )}
-
-        {showTimer && (
-          <TouchableOpacity style={styles.stopButton} onPress={resetMeditation}>
-            <Text style={styles.whiteText}>Reset</Text>
-          </TouchableOpacity>
-        )}
+              <View>
+                {!timerRunning && (
+                  <TouchableOpacity onPress={beginSession}>
+                    <AntDesign name="play" size={90} color="white" />
+                  </TouchableOpacity>
+                )}
+                {timerRunning && (
+                  <TouchableOpacity onPress={stopSession}>
+                    <AntDesign name="pausecircle" size={90} color="white" />
+                  </TouchableOpacity>
+                )}
+              </View>
+              <TouchableOpacity onPress={resetMeditation}>
+                <MaterialCommunityIcons name="restart" size={50} color="red" />
+              </TouchableOpacity>
+            </View>
+          )}
+        </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  image: {
     flex: 1,
+    resizeMode: 'cover',
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  beginButton: {
-    margin: 20,
-    padding: 20,
-    backgroundColor: '#4CAF50',
-    width: '60%',
+  countdownDigits: {
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    borderWidth: 1,
+    borderColor: 'black',
   },
-  stopButton: {
-    margin: 20,
-    padding: 20,
-    backgroundColor: '#F44336',
-    width: '60%',
-  },
-  whiteText: {
-    textAlign: 'center',
-    color: '#fff',
+  infoText: {
+    color: 'white',
+    paddingBottom: 20,
     fontSize: 20,
   },
-  blackText: {
-    fontSize: 18,
+  container: {
+    flex: 1,
   },
-  textView: {
-    paddingBottom: 20,
+  startContainer: {
+    flex: 1,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
   },
   input: {
-    height: 30,
-    width: '50%',
+    height: 150,
+    width: '100%',
     textAlign: 'center',
+    textAlignVertical: 'center',
+    color: 'white',
+    fontSize: 30,
+    margin: 15,
+    padding: 20,
   },
 });
 

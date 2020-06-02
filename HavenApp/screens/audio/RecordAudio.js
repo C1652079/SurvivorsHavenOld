@@ -149,7 +149,7 @@ const RecordAudio = (props) => {
     }
   };
 
-  if (isDoneRecording) {
+  if (isDoneRecording) { //TODO
     return (
       <View>
         <TouchableOpacity onPress={onCancelSave}>

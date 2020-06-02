@@ -36,12 +36,6 @@ export default class SignatureScreen extends React.Component {
     this._offsetY = 0;
   }
 
-  shouldComponentUpdate(nextState) {
-    if (this.state.donePaths !== nextState.donePaths) {
-      return true;
-    }
-  }
-
   setOffset(options) {
     this._offsetX = options.x;
     this._offsetY = options.y + options.height / 1.8;
