@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
+import { Text, View, AsyncStorage } from 'react-native';
 import * as Font from 'expo-font';
 import Firebase, { FirebaseProvider } from './config/';
 import AppContainer from './navigation';
@@ -33,5 +33,3 @@ export default function App() {
     </FirebaseProvider>
   );
 }
-
-const styles = StyleSheet.create({});

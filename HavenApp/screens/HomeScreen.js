@@ -38,7 +38,7 @@ const HomeScreen = (props) => {
       <Button
         title="Record Audio"
         onPress={() => {
-          props.navigation.navigate('RecordAudio');
+          props.navigation.navigate('Record');
         }}
         titleStyle={{
           color: '#F57C00',

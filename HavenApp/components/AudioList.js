@@ -18,11 +18,11 @@ const AudioList = (props) => {
   };
 
   return (
-      <FlatList
-        data={props.listData}
-        keyExtractor={(item, index) => item.id}
-        renderItem={renderAudioItem}
-      />
+    <FlatList
+      data={props.listData}
+      keyExtractor={(item, index) => item.id}
+      renderItem={renderAudioItem}
+    />
   );
 };
 

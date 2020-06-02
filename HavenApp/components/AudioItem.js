@@ -14,34 +14,39 @@ const AudioItem = (props) => {
   };
 
   return (
-    <View style={styles.audioItem}>
-      <View style={styles.infoContainer}>
-        <TouchableOpacity onPress={props.enablePlayback.bind(this, props.url)}>
-          <Text>{props.title}</Text>
-          <Text style={styles.date}>
-            {moment(props.date).calendar(null, recordDate)}
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.deleteContainer}>
-        <TouchableOpacity onPress={props.removeFile.bind(this, props.id)}>
-          <AntDesign name="delete" size={24} color="red" />
-        </TouchableOpacity>
-      </View>
+    <View style={styles.itemContainer}>
+      <TouchableOpacity onPress={props.enablePlayback.bind(this, props.url)}>
+        <Text style={styles.audioName}>{props.title}</Text>
+        <Text style={styles.date}>
+          {moment(props.date).calendar(null, recordDate)}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{ marginRight: 20 }}
+        onPress={props.removeFile.bind(this, props.id)}
+      >
+        <AntDesign name="delete" size={22} color="red" />
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  audioItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
+  audioName: {
+    color: 'black',
+    fontSize: 22,
   },
   date: {
-    color: '#505050',
+    fontSize: 18,
+    color: 'white',
   },
-  infoContainer: {},
-  deleteContainer: {},
+  itemContainer: {
+    margin: 10,
+    padding: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
 });
 
 export default AudioItem;
