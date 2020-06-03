@@ -5,7 +5,8 @@ import Firebase, { FirebaseProvider } from './config/';
 import AppContainer from './navigation';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
-import audioReducer from './store/reducer';
+import audioReducer from './store/audioReducer';
+import imageReducer from './store/imageReducer';
 import { persistStore, persistReducer } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 
@@ -16,9 +17,10 @@ const persistConfig = {
 
 const reducer = combineReducers({
   audios: audioReducer,
+  images: imageReducer,
 });
-const persistedReducer = persistReducer(persistConfig, reducer);
 
+const persistedReducer = persistReducer(persistConfig, reducer);
 const store = createStore(persistedReducer);
 const persistor = persistStore(store);
 

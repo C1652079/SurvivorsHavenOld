@@ -6,7 +6,6 @@ import {
   MeditationTimer,
   RecordAudio,
   AudioLibrary,
-  ChooseMoodImage,
   DrawPad,
 } from '../screens/';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -50,7 +49,6 @@ const AudioTabNavigator = createBottomTabNavigator(
 const AppNavigator = createStackNavigator(
   {
     Home: HomeScreen,
-    ChooseImage: ChooseMoodImage,
     MeditationTimer: MeditationTimer,
     RecordAudio: AudioTabNavigator,
     DrawPad: DrawPad,
