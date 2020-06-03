@@ -20,9 +20,7 @@ import { addImage } from '../store/actions';
 import * as ImagePicker from 'expo-image-picker';
 
 const HomeScreen = (props) => {
-  const [selectedImage, setSelectedImage] = React.useState(false);
   const image = require('../assets/backgrounds/Home.png');
-
   const pictureUri = useSelector((state) => state.images.imageUri);
   const dispatch = useDispatch();
 
@@ -45,7 +43,6 @@ const HomeScreen = (props) => {
     }
 
     addImageToDisplay(pickerResult.uri);
-    setSelectedImage(true);
   };
 
   const SignOutHandler = async () => {
@@ -65,10 +62,10 @@ const HomeScreen = (props) => {
     <ImageBackground source={image} style={styles.backgroundImage}>
       <View style={styles.container}>
         <View style={styles.homeImageContainer}>
-          {selectedImage && (
+          {pictureUri !== '' && (
             <Image source={{ uri: pictureUri }} style={styles.homeImage} />
           )}
-          {!selectedImage && (
+          {pictureUri === '' && (
             <Text style={styles.infoText}>
               Press choose image to display a picture here
             </Text>
