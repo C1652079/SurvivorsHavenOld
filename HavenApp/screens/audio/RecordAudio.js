@@ -5,13 +5,16 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ImageBackground,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
 import { Audio } from 'expo-av';
 import moment from 'moment';
 import { durationToStr } from '../../utils/DateHelper';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Entypo } from '@expo/vector-icons';
 import { addAudio } from '../../store/actions';
 
 const RecordAudio = (props) => {
@@ -24,6 +27,7 @@ const RecordAudio = (props) => {
   const [havePermission, setHavePermission] = useState(false);
 
   const dispatch = useDispatch();
+  const image = require('../../assets/backgrounds/Recording.png');
 
   const setAudioMode = async (allowsRecordingIOS) => {
     try {
@@ -127,7 +131,7 @@ const RecordAudio = (props) => {
       addAudioToLibrary(audioItem);
       setAudioName('');
       setIsDoneRecording(false);
-      props.navigation.navigate('AudioLibrary');
+      props.navigation.navigate('Library');
     }
   };
 
@@ -151,51 +155,59 @@ const RecordAudio = (props) => {
 
   if (isDoneRecording) {
     return (
-      <View>
-        <TouchableOpacity onPress={onCancelSave}>
-          <Text>cross</Text>
-        </TouchableOpacity>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <ImageBackground source={image} style={styles.image}>
+          <TouchableOpacity style={{ margin: 10 }} onPress={onCancelSave}>
+            <Entypo name="circle-with-cross" size={24} color="black" />
+          </TouchableOpacity>
+          <View style={styles.saveAsContainer}>
+            <TextInput
+              style={styles.input}
+              value={audioName}
+              onChangeText={setAudioName}
+              autoCorrect={false}
+              onSubmitEditing={onSubmit}
+              returnKeyType="done"
+              autoFocus
+              placeholder="Give a name for your audio"
+              placeholderTextColor="white"
+            />
 
-        <TextInput
-          placeholder="Give a name for your audio"
-          value={audioName}
-          onChangeText={setAudioName}
-          autoCorrect={false}
-          onSubmitEditing={onSubmit}
-          returnKeyType="done"
-          autoFocus
-        />
-
-        <Button title="Continue" onPress={onSubmit} disabled={!audioName} />
-      </View>
+            <Button
+              title="Continue"
+              onPress={onSubmit}
+              titleStyle={{
+                color: 'white',
+              }}
+              type="clear"
+              disabled={!audioName}
+            />
+          </View>
+        </ImageBackground>
+      </TouchableWithoutFeedback>
     );
   } else {
     return (
-      <View style={styles.container}>
-        <View style={styles.recordingContainer}>
-          <TouchableOpacity onPress={onRecordPressed}>
-            {isRecording ? (
-              <Ionicons name="ios-mic" size={80} color="red" />
-            ) : (
-              <Ionicons name="ios-mic" size={80} color="black" />
-            )}
-          </TouchableOpacity>
-          <Text style={styles.recordingTimestamp}>
-            {durationToStr(durationMillis)}
-          </Text>
+      <ImageBackground source={image} style={styles.image}>
+        <View style={styles.container}>
+          <View style={styles.recordingContainer}>
+            <TouchableOpacity onPress={onRecordPressed}>
+              {isRecording ? (
+                <Ionicons name="ios-mic" size={90} color="red" />
+              ) : (
+                <Ionicons name="ios-mic" size={90} color="white" />
+              )}
+            </TouchableOpacity>
+            <Text style={styles.recordingTimestamp}>
+              {durationToStr(durationMillis)}
+            </Text>
+          </View>
         </View>
-
-        <Button
-          title="Library"
-          onPress={() => {
-            props.navigation.navigate('AudioLibrary');
-          }}
-          titleStyle={{
-            color: '#F57C00',
-          }}
-          type="clear"
-        />
-      </View>
+      </ImageBackground>
     );
   }
 };
@@ -207,14 +219,33 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
+  saveAsContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   recordingContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
   recordingTimestamp: {
+    color: 'white',
     fontSize: 34,
     paddingLeft: 20,
+  },
+  image: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
+  input: {
+    height: 150,
+    width: '100%',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color: 'white',
+    fontSize: 20,
+    margin: 15,
+    padding: 20,
   },
 });
 

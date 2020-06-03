@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Slider,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons, Entypo, Octicons } from '@expo/vector-icons';
@@ -35,6 +36,7 @@ const AudioLibrary = (props) => {
   const [correctPitch, setCorrectPitch] = useState(false);
 
   const dispatch = useDispatch();
+  const image = require('../../assets/backgrounds/Recording.png');
 
   const setAudioMode = async () => {
     try {
@@ -180,76 +182,84 @@ const AudioLibrary = (props) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.audioList}>
-        <AudioList
-          listData={availableRecordings}
-          enablePlayback={enablePlayback}
-          removeFile={removeAudioFromLibrary}
-        />
-      </View>
-      <View
-        style={[
-          styles.playerContainer,
-          {
-            opacity: !isPlaybackAllowed || isLoading ? 0.5 : 1.0,
-          },
-        ]}
-      >
-        <View style={styles.playbackContainer}>
-          <Slider
-            style={styles.playbackSlider}
-            value={getSeekPosition()}
-            onValueChange={seekAudio}
-            onSlidingComplete={completeSeekHandler}
-            disabled={!isPlaybackAllowed || isLoading}
+    <ImageBackground source={image} style={styles.image}>
+      <View style={styles.container}>
+        <View style={styles.audioList}>
+          <AudioList
+            listData={availableRecordings}
+            enablePlayback={enablePlayback}
+            removeFile={removeAudioFromLibrary}
           />
-          <Text style={styles.playbackTimestamp}>
-            {durationToStr(soundPosition > soundDuration ? 0 : soundPosition)}
-          </Text>
         </View>
-
-        <View style={styles.buttonsContainer}>
-          <View style={styles.playStopContainer}>
-            <TouchableOpacity
-              onPress={stopPlayback}
+        <View
+          style={[
+            styles.playerContainer,
+            {
+              opacity: !isPlaybackAllowed || isLoading ? 0.5 : 1.0,
+            },
+          ]}
+        >
+          <View style={styles.playbackContainer}>
+            <Slider
+              style={styles.playbackSlider}
+              value={getSeekPosition()}
+              onValueChange={seekAudio}
+              onSlidingComplete={completeSeekHandler}
               disabled={!isPlaybackAllowed || isLoading}
-            >
-              <Entypo name="controller-stop" size={50} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={playPlauseHandler}
-              disabled={!isPlaybackAllowed || isLoading}
-            >
-              {isPlaying ? (
-                <Ionicons name="ios-pause" size={50} color="black" />
-              ) : (
-                <Ionicons name="ios-play" size={50} color="black" />
-              )}
-            </TouchableOpacity>
+              minimumTrackTintColor="black"
+              maximumTrackTintColor="black"
+              thumbTintColor="black"
+            />
+            <Text style={styles.playbackTimestamp}>
+              {durationToStr(soundPosition > soundDuration ? 0 : soundPosition)}
+            </Text>
           </View>
 
-          <View style={styles.volumeContainer}>
-            <TouchableOpacity
-              onPress={mutePlayback}
-              disabled={!isPlaybackAllowed || isLoading}
-            >
-              {muted ? (
-                <Octicons name="mute" size={40} color="black" />
-              ) : (
-                <Octicons name="unmute" size={40} color="black" />
-              )}
-            </TouchableOpacity>
-            <Slider
-              style={styles.volumeSlider}
-              value={1}
-              onValueChange={changeVolume}
-              disabled={!isPlaybackAllowed || isLoading}
-            />
+          <View style={styles.buttonsContainer}>
+            <View style={styles.playStopContainer}>
+              <TouchableOpacity
+                onPress={stopPlayback}
+                disabled={!isPlaybackAllowed || isLoading}
+              >
+                <Entypo name="controller-stop" size={50} color="white" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={playPlauseHandler}
+                disabled={!isPlaybackAllowed || isLoading}
+              >
+                {isPlaying ? (
+                  <Ionicons name="ios-pause" size={50} color="white" />
+                ) : (
+                  <Ionicons name="ios-play" size={50} color="white" />
+                )}
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.volumeContainer}>
+              <TouchableOpacity
+                onPress={mutePlayback}
+                disabled={!isPlaybackAllowed || isLoading}
+              >
+                {muted ? (
+                  <Octicons name="mute" size={40} color="white" />
+                ) : (
+                  <Octicons name="unmute" size={40} color="white" />
+                )}
+              </TouchableOpacity>
+              <Slider
+                style={styles.volumeSlider}
+                value={1}
+                onValueChange={changeVolume}
+                disabled={!isPlaybackAllowed || isLoading}
+                minimumTrackTintColor="black"
+                maximumTrackTintColor="black"
+                thumbTintColor="black"
+              />
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -262,9 +272,6 @@ const styles = StyleSheet.create({
   },
   audioList: {
     flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 15,
   },
   playerContainer: {
     flex: 1,
@@ -300,6 +307,10 @@ const styles = StyleSheet.create({
   },
   volumeSlider: {
     width: DeviceWidth / 3.0,
+  },
+  image: {
+    flex: 1,
+    resizeMode: 'cover',
   },
 });
 

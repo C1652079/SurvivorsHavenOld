@@ -2,12 +2,10 @@ import React from 'react';
 import {
   Dimensions,
   View,
-  Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
-  Image,
   PanResponder,
+  FlatList,
 } from 'react-native';
 import Colors from '../constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
@@ -25,31 +23,21 @@ export default class SignatureScreen extends React.Component {
       currentPoints: [],
     };
 
-    this._panResponder = PanResponder.create({
+    this.panResponder = PanResponder.create({
       onMoveShouldSetPanResponder: (evt, gs) => true,
-      onPanResponderGrant: (evt, gs) => this.onResponderGrant(evt, gs),
-      onPanResponderMove: (evt, gs) => this.onResponderMove(evt, gs),
+      onPanResponderGrant: (evt, gs) => this.onTouch(evt, gs),
+      onPanResponderMove: (evt, gs) => this.onTouch(evt, gs),
       onPanResponderRelease: (evt, gs) => this.onResponderRelease(evt, gs),
     });
 
-    this._offsetX = 0;
-    this._offsetY = 0;
+    this.offsetX = 0;
+    this.offsetY = 0;
+    this.allColors = Object.keys(Colors);
   }
 
-  shouldComponentUpdate(nextState) {
-    if (this.state.donePaths !== nextState.donePaths) {
-      return true;
-    }
-  }
-
-  setOffset(options) {
-    this._offsetX = options.x;
-    this._offsetY = options.y + options.height / 1.8;
-  }
-
-  pointsToSvg(points) {
-    const offsetX = this._offsetX;
-    const offsetY = this._offsetY;
+  convertPointsToSvg = (points) => {
+    const offsetX = this.offsetX;
+    const offsetY = this.offsetY;
 
     if (points.length > 0) {
       let path = `M ${points[0].x - offsetX},${points[0].y - offsetY}`;
@@ -60,9 +48,9 @@ export default class SignatureScreen extends React.Component {
     } else {
       return '';
     }
-  }
+  };
 
-  onTouch(evt) {
+  onTouch = (evt) => {
     let [x, y] = [evt.nativeEvent.pageX, evt.nativeEvent.pageY];
     const newCurrentPoints = this.state.currentPoints;
     newCurrentPoints.push({ x, y });
@@ -72,17 +60,9 @@ export default class SignatureScreen extends React.Component {
       currentPoints: newCurrentPoints,
       currentMax: this.state.currentMax,
     });
-  }
+  };
 
-  onResponderGrant(evt) {
-    this.onTouch(evt);
-  }
-
-  onResponderMove(evt) {
-    this.onTouch(evt);
-  }
-
-  onResponderRelease() {
+  onResponderRelease = () => {
     const newPaths = this.state.donePaths;
     const newMax = this.state.currentMax + 1;
 
@@ -90,7 +70,7 @@ export default class SignatureScreen extends React.Component {
       newPaths.push(
         <Path
           key={Math.random()}
-          d={this.pointsToSvg(this.state.currentPoints)}
+          d={this.convertPointsToSvg(this.state.currentPoints)}
           stroke={this.state.color}
           strokeWidth={this.state.strokeWidth}
           fill="none"
@@ -103,85 +83,76 @@ export default class SignatureScreen extends React.Component {
       currentPoints: [],
       currentMax: newMax,
     });
-  }
-
-  _onLayoutContainer = (e) => {
-    this.setOffset(e.nativeEvent.layout);
   };
 
-  _renderOptions() {
-    const allColors = Object.keys(Colors);
+  onLayoutContainer = (e) => {
+    this.offsetX = e.nativeEvent.layout.x;
+    this.offsetY = e.nativeEvent.layout.y + e.nativeEvent.layout.height / 10;
+  };
 
-    return allColors.map((color) => (
+  renderColors = (itemData) => {
+    return (
       <TouchableOpacity
-        key={color}
-        style={[styles.colorOption, { backgroundColor: Colors[color] }]}
-        onPress={() => this._changeColor(Colors[color])}
+        key={itemData.item}
+        style={[styles.colorOption, { backgroundColor: Colors[itemData.item] }]}
+        onPress={() => this.changeColor(Colors[itemData.item])}
       />
-    ));
-  }
+    );
+  };
 
-  _cancel = () => {
+  clearScreen = () => {
     this.setState({ donePaths: [] });
   };
 
-  _undo = () => {
+  undo = () => {
     this.setState({ donePaths: this.state.donePaths.slice(0, -1) });
   };
 
-  _changeColor = (color) => {
+  changeColor = (color) => {
     this.setState({ color });
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <View style={styles.headerButtonsContainer}>
-            <TouchableOpacity onPress={this._cancel}>
-              <FontAwesome name="remove" style={styles.icon} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this._undo}>
-              <FontAwesome name="undo" style={styles.icon} />
-            </TouchableOpacity>
-          </View>
+        <View>
+          <FlatList
+            data={this.allColors}
+            keyExtractor={(item, index) => item}
+            renderItem={this.renderColors}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+          />
         </View>
 
-        <View style={styles.colorContainer}>{this._renderOptions()}</View>
-
         <View
-          ref={(view) => {
-            this._signatureView = view;
-          }}
-          style={{ alignItems: 'center' }}
+          {...this.panResponder.panHandlers}
+          onLayout={this.onLayoutContainer}
         >
-          <View
-            onLayout={this._onLayoutContainer}
-            style={[
-              styles.drawContainer,
-              { backgroundColor: '#FFF', marginTop: 10 },
-              { width: this.props.width, height: this.props.height },
-            ]}
+          <Svg
+            width={Dimensions.get('window').width}
+            height={Dimensions.get('window').height - 190}
           >
-            <View {...this._panResponder.panHandlers}>
-              <Svg
-                style={styles.drawSurface}
-                width={Dimensions.get('window').width - 20}
-                height={Dimensions.get('window').width - 20}
-              >
-                <G>
-                  {this.state.donePaths.map((path) => path)}
-                  <Path
-                    key={Math.random()}
-                    d={this.pointsToSvg(this.state.currentPoints)}
-                    stroke={this.state.color}
-                    strokeWidth={this.state.strokeWidth}
-                    fill="none"
-                  />
-                </G>
-              </Svg>
-            </View>
-          </View>
+            <G>
+              {this.state.donePaths.map((path) => path)}
+              <Path
+                key={Math.random()}
+                d={this.convertPointsToSvg(this.state.currentPoints)}
+                stroke={this.state.color}
+                strokeWidth={this.state.strokeWidth}
+                fill="none"
+              />
+            </G>
+          </Svg>
+        </View>
+
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity onPress={this.undo}>
+            <FontAwesome name="undo" size={30} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.clearScreen}>
+            <FontAwesome name="remove" size={30} color="black" />
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -190,69 +161,19 @@ export default class SignatureScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'stretch',
-    backgroundColor: 'rgba(0,0,0,0.1)',
+    flex: 1,
+    backgroundColor: 'white',
   },
-  icon: {
-    color: '#999',
-    fontSize: 22,
-    margin: 5,
-  },
-  headerContainer: {
-    flexDirection: 'column',
-    backgroundColor: '#EEE',
-    paddingTop: 18,
-    paddingBottom: 5,
-  },
-  headerButtonsContainer: {
+  buttonsContainer: {
+    margin: 10,
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    marginTop: 7,
-    marginBottom: 3,
-  },
-  colorContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'space-between',
-    backgroundColor: '#FFF',
-    borderBottomWidth: 1,
-    borderColor: '#DDD',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    alignItems: 'center',
   },
   colorOption: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    marginVertical: 5,
-    marginHorizontal: 10,
-  },
-  image: {
-    width: Dimensions.get('window').width / 3,
-    height: Dimensions.get('window').width / 3,
-    borderWidth: 2,
-    borderRadius: 2,
-    borderColor: '#ddd',
-    borderBottomWidth: 0,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.4,
-    shadowRadius: 2,
+    width: 30,
+    height: 30,
     margin: 10,
-    marginRight: 0,
-  },
-  drawContainer: {
-    borderWidth: 1,
-    borderRadius: 2,
-    borderColor: '#ddd',
-    borderBottomWidth: 0,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-
-  drawSurface: {
-    backgroundColor: 'transparent',
+    borderRadius: 20,
   },
 });

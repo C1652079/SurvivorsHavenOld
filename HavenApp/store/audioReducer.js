@@ -24,6 +24,7 @@ const audioReducer = (state = initialState, action) => {
         updatedList.splice(existingIndex, 1);
         return { ...state, audioItems: updatedList };
       }
+
     default:
       return state;
   }
