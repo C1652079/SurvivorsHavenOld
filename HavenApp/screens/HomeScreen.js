@@ -14,6 +14,7 @@ import {
   MaterialCommunityIcons,
   Entypo,
   MaterialIcons,
+  Octicons,
 } from '@expo/vector-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { addImage } from '../store/actions';
@@ -62,6 +63,10 @@ const HomeScreen = (props) => {
     <ImageBackground source={image} style={styles.backgroundImage}>
       <View style={styles.container}>
         <View style={styles.homeImageContainer}>
+          <View>
+            <Text style={styles.homeScreenQuote}>"You are amazing"</Text>
+          </View>
+
           {pictureUri !== '' && (
             <Image source={{ uri: pictureUri }} style={styles.homeImage} />
           )}
@@ -74,48 +79,52 @@ const HomeScreen = (props) => {
         <View style={styles.buttonContainer}>
           <View style={styles.row}>
             <TouchableOpacity
+              style={styles.individualButton}
               onPress={() => {
                 props.navigation.navigate('MeditationTimer');
               }}
             >
-              <MaterialCommunityIcons name="brain" size={60} color="black" />
-              <Text>Meditate</Text>
+              <MaterialCommunityIcons name="brain" size={70} color="black" />
+              <Text style={styles.buttonText}>Meditate</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
+              style={styles.individualButton}
               onPress={() => {
                 props.navigation.navigate('Record');
               }}
             >
-              <MaterialIcons name="audiotrack" size={60} color="black" />
-              <Text>Monologues</Text>
+              <MaterialIcons name="audiotrack" size={70} color="black" />
+              <Text style={styles.buttonText}>Monologues</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
             <TouchableOpacity
+              style={styles.individualButton}
               onPress={() => {
                 props.navigation.navigate('DrawPad');
               }}
             >
-              <MaterialCommunityIcons name="draw" size={60} color="black" />
-              <Text>Drawing Pad</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={openImagePickerAsync}>
-              <Entypo name="image-inverted" size={60} color="black" />
-              <Text>Choose image</Text>
+              <MaterialCommunityIcons name="draw" size={70} color="black" />
+              <Text style={styles.buttonText}>Drawing Pad</Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.row}>
-            <Button
-              title="Signout"
+            <TouchableOpacity
+              style={styles.individualButton}
+              onPress={openImagePickerAsync}
+            >
+              <Entypo name="image-inverted" size={30} color="white" />
+              <Text style={styles.buttonText}>Choose image</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.individualButton}
               onPress={SignOutHandler}
-              titleStyle={{
-                color: 'red',
-              }}
-              type="clear"
-            />
+            >
+              <Octicons name="sign-out" size={30} color="red" />
+              <Text style={styles.buttonText}>Sign out</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -128,21 +137,37 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-evenly',
   },
+  buttonText: {
+    color: 'black',
+  },
+  homeScreenQuote: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 28,
+    color: 'white',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
+  },
   homeImageContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
   },
   homeImage: {
-    width: 250,
-    height: 250,
-    resizeMode: 'contain',
+    width: '60%',
+    height: '80%',
+    resizeMode: 'cover',
+    borderRadius: 50,
+    overflow: 'hidden',
   },
   row: {
-    margin: 15,
-    padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+  individualButton: {
+    padding: 10,
+    alignItems: 'center',
   },
   buttonContainer: {
     flex: 1,
@@ -154,6 +179,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 18,
+    color: 'white',
   },
 });
 
