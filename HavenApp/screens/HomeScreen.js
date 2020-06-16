@@ -21,7 +21,8 @@ import { addImage } from '../store/actions';
 import * as ImagePicker from 'expo-image-picker';
 
 const HomeScreen = (props) => {
-  const image = require('../assets/backgrounds/Home.png');
+  const image = require('../assets/backgrounds/Home1.png');
+  const imageRecord = require('../assets/backgrounds/Home1.png');
   const pictureUri = useSelector((state) => state.images.imageUri);
   const dispatch = useDispatch();
 
@@ -78,53 +79,79 @@ const HomeScreen = (props) => {
         </View>
         <View style={styles.buttonContainer}>
           <View style={styles.row}>
-            <TouchableOpacity
-              style={styles.individualButton}
-              onPress={() => {
-                props.navigation.navigate('MeditationTimer');
-              }}
+            <View
+              style={[
+                styles.outerCircleBig,
+                { backgroundColor: 'deepskyblue' },
+              ]}
             >
-              <MaterialCommunityIcons name="brain" size={70} color="black" />
-              <Text style={styles.buttonText}>Meditate</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.individualButton}
+                onPress={() => {
+                  props.navigation.navigate('MeditationTimer');
+                }}
+              >
+                <MaterialCommunityIcons name="brain" size={55} color="white" />
+                <Text style={styles.buttonText}>Meditate</Text>
+              </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity
-              style={styles.individualButton}
-              onPress={() => {
-                props.navigation.navigate('Record');
-              }}
+            <View
+              style={[
+                styles.outerCircleBig,
+                { backgroundColor: 'palevioletred' },
+              ]}
             >
-              <MaterialIcons name="audiotrack" size={70} color="black" />
-              <Text style={styles.buttonText}>Monologues</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.individualButton}
+                onPress={() => {
+                  props.navigation.navigate('Record');
+                }}
+              >
+                <MaterialIcons name="audiotrack" size={55} color="white" />
+                <Text style={styles.buttonText}>Record</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.row}>
-            <TouchableOpacity
-              style={styles.individualButton}
-              onPress={() => {
-                props.navigation.navigate('DrawPad');
-              }}
-            >
-              <MaterialCommunityIcons name="draw" size={70} color="black" />
-              <Text style={styles.buttonText}>Drawing Pad</Text>
-            </TouchableOpacity>
+            <View style={[styles.outerCircleBig, { backgroundColor: 'gold' }]}>
+              <TouchableOpacity
+                style={styles.individualButton}
+                onPress={() => {
+                  props.navigation.navigate('DrawPad');
+                }}
+              >
+                <MaterialCommunityIcons name="draw" size={55} color="white" />
+                <Text style={styles.buttonText}>Sketch</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={styles.row}>
-            <TouchableOpacity
-              style={styles.individualButton}
-              onPress={openImagePickerAsync}
+            <View
+              style={[styles.outerCircleSmall, { backgroundColor: 'darkgray' }]}
             >
-              <Entypo name="image-inverted" size={30} color="white" />
-              <Text style={styles.buttonText}>Choose image</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.individualButton}
-              onPress={SignOutHandler}
+              <TouchableOpacity
+                style={styles.individualButton}
+                onPress={openImagePickerAsync}
+              >
+                <Entypo name="image-inverted" size={30} color="white" />
+                <Text style={styles.buttonText}>Choose</Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={[styles.outerCircleSmall, { backgroundColor: 'tomato' }]}
             >
-              <Octicons name="sign-out" size={30} color="red" />
-              <Text style={styles.buttonText}>Sign out</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.individualButton}
+                onPress={SignOutHandler}
+              >
+                <Octicons name="sign-out" size={25} color="white" />
+                <Text style={[styles.buttonText, { color: 'white' }]}>
+                  Sign out
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>
@@ -135,10 +162,40 @@ const HomeScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
+  },
+  outerCircleBig: {
+    shadowOpacity: 0.8,
+    shadowRadius: 7,
+    shadowOffset: {
+      height: 5,
+      width: 5,
+    },
+    elevation: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 40,
+    width: '25%',
+    height: '65%',
+  },
+  outerCircleSmall: {
+    shadowOpacity: 0.8,
+    shadowRadius: 7,
+    shadowOffset: {
+      height: 5,
+      width: 5,
+    },
+    elevation: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 40,
+    width: '20%',
+    height: '60%',
   },
   buttonText: {
     color: 'black',
+    fontSize: 12,
+    flexWrap: 'wrap',
   },
   homeScreenQuote: {
     fontWeight: 'bold',
@@ -151,7 +208,7 @@ const styles = StyleSheet.create({
   },
   homeImageContainer: {
     flex: 1,
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
     alignItems: 'center',
   },
   homeImage: {
@@ -172,6 +229,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 1,
     justifyContent: 'center',
+    marginBottom: 70,
+    marginTop: 100,
   },
   backgroundImage: {
     flex: 1,
